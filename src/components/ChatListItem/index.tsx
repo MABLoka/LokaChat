@@ -1,29 +1,38 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 const ChatListItem = ({ chat }) => {
-    return (
-        <View style={styles.container}>
-                {/* User Avatar */}
-        <Image
-            source={{ uri: chat.user.image }}
-            style={styles.image}
-        />
+    const navigation = useNavigation();
 
-                {/* Content Container */}
-        <View style={styles.content}>
-                    {/* Row */}
-                <View style={styles.row}>
-                    <Text style={styles.name} numberOfLines={1}>{chat.user.name}</Text>
-                    <Text style={styles.subTitle}>{dayjs(chat.lastMessage.createdAt).fromNow(true)}</Text>
+    return (
+        <Pressable
+            onPress={ () => navigation.navigate("Chat", {id: chat.id, name: chat.user.name}) }
+            style={styles.container}
+        >
+            <View style={styles.container}>
+                    {/* User Avatar */}
+                <Image
+                    source={{ uri: chat.user.image }}
+                    style={styles.image}
+                />
+
+                        {/* Content Container */}
+                <View style={styles.content}>
+                            {/* Row */}
+                        <View style={styles.row}>
+                            <Text style={styles.name} numberOfLines={1}>{chat.user.name}</Text>
+                            <Text style={styles.subTitle}>{dayjs(chat.lastMessage.createdAt).fromNow(true)}</Text>
+                        </View>
+                    <Text style={styles.subTitle} numberOfLines={2}>
+                        {chat.lastMessage.text}
+                    </Text>
                 </View>
-            <Text style={styles.subTitle} numberOfLines={2}>
-                {chat.lastMessage.text}
-            </Text>
-        </View>
-        </View>
+            </View>
+        </Pressable>
     );
 };
 
@@ -35,8 +44,10 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         marginHorizontal: 10,
         marginVertical: 5,
+        paddingRight: 20,
         height: 70,
-        width: '95%'
+        
+        width: '100%'
     },
     image: {
         width: 60,
